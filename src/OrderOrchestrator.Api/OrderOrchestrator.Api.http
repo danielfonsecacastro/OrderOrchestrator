@@ -1,0 +1,62 @@
+@OrderOrchestrator.Api_HostAddress = http://localhost:7199
+
+POST {{OrderOrchestrator.Api_HostAddress}}/orders/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "orderId": "123e4567-e89b-12d3-a456-426614174000",
+  "customer": {
+    "customerId": "c1",
+    "name": "Daniel Castro",
+    "email": "daniel@example.com",
+    "billingAddress": {
+      "street": "123 Main St",
+      "city": "São Paulo",
+      "state": "SP",
+      "zipCode": "01234-567",
+      "country": "Brazil"
+    },
+    "shippingAddress": {
+      "street": "123 Main St",
+      "city": "São Paulo",
+      "state": "SP",
+      "zipCode": "01234-567",
+      "country": "Brazil"
+    }
+  },
+  "items": [
+    {
+      "productId": "p1",
+      "productName": "Produto Exemplo",
+      "unitPrice": 99.90,
+      "quantity": 2
+    },
+    {
+      "productId": "p2",
+      "productName": "Outro Produto",
+      "unitPrice": 49.50,
+      "quantity": 1
+    }
+  ],
+  "shippingAddress": {
+    "street": "123 Main St",
+    "city": "São Paulo",
+    "state": "SP",
+    "zipCode": "01234-567",
+    "country": "Brazil"
+  },
+  "billingAddress": {
+    "street": "123 Main St",
+    "city": "São Paulo",
+    "state": "SP",
+    "zipCode": "01234-567",
+    "country": "Brazil"
+  },
+  "payment": {
+    "method": "CreditCard",
+    "transactionId": "txn_001",
+    "paidAt": "2025-06-08T17:00:00Z"
+  },
+  "orderDate": "2025-06-08T17:00:00Z"
+}
