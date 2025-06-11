@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,10 @@ app.UseHttpsRedirection();
 app.MapPost("/orders", (Order request) =>
 {
     return Results.Accepted();
-}).Accepts<Order>("application/json");
+})
+.WithParameterValidation()
+.Accepts<Order>("application/json")
+.ProducesValidationProblem();
 
 app.Run();
 
@@ -60,6 +64,7 @@ internal record Customer(
         Address ShippingAddress
 );
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 internal enum PaymentMethodType
 {
     CreditCard,
@@ -71,7 +76,7 @@ internal enum PaymentMethodType
 
 internal record PaymentDetails(
     [property: Required(ErrorMessage = "Method is required.")]
-        PaymentMethodType Method,
+        PaymentMethodType? Method,
 
     [property: Required(ErrorMessage = "TransactionId is required.")]
         string TransactionId,

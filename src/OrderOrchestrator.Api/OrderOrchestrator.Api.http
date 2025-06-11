@@ -1,4 +1,4 @@
-@OrderOrchestrator.Api_HostAddress = http://localhost:7199
+@OrderOrchestrator.Api_HostAddress = https://localhost:7199
 
 POST {{OrderOrchestrator.Api_HostAddress}}/orders/
 Accept: application/json
