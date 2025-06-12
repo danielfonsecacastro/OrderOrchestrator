@@ -11,4 +11,8 @@
     <PackageReference Include="MinimalApis.Extensions" Version="0.11.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OrderOrchestrator.Infrastructure\OrderOrchestrator.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
