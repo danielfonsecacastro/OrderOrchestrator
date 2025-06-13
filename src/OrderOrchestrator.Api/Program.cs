@@ -23,15 +23,19 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 
-app.MapPost("/orders", async (Order request, IMessageBus messageBus) =>
+app.MapPost("/orders", async (Order request, IMessageBus messageBus, ILogger<Program> logger) =>
 {
     try
     {
+        logger.LogInformation("Received new order: {@Order}", request);
         await messageBus.Publish("order_queue", System.Text.Json.JsonSerializer.Serialize(request));
+        logger.LogInformation("Order published successfully to RabbitMQ.");
+        
         return Results.Accepted();
     }
     catch (BrokerUnreachableException ex)
     {
+        logger.LogError(ex, "RabbitMQ broker unreachable while publishing order: {@Order}", request);
         return Results.Problem(
             title: "Error publishing message",
             detail: ex.Message,
@@ -39,6 +43,7 @@ app.MapPost("/orders", async (Order request, IMessageBus messageBus) =>
     }
     catch (Exception ex)
     {
+        logger.LogError(ex, "Unexpected error while publishing order: {@Order}", request);
         return Results.Problem(
             title: "Unexpected error publishing message",
             detail: ex.Message,
