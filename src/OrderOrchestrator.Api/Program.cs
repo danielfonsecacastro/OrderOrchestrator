@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using OrderOrchestrator.Domain.Interfaces;
 using OrderOrchestrator.Infrastructure.Configurations;
 using OrderOrchestrator.Infrastructure.MessageBus;
@@ -23,31 +24,45 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 
-app.MapPost("/orders", async (Order request, IMessageBus messageBus, ILogger<Program> logger) =>
+app.MapPost("/orders", async (Order request, IMessageBus messageBus, ILogger<Program> logger, HttpContext httpContext) =>
 {
-    try
+    string? correlationId = null;
+    if (httpContext.Request.Headers.TryGetValue("X-Correlation-Id", out var values))
+        correlationId = values;
+
+    logger.LogInformation("correlationId daniel debug: {@correlationId}", correlationId);
+    using (logger.BeginScope(new Dictionary<string, object> { ["CorrelationId"] = correlationId ?? Guid.NewGuid().ToString() }))
     {
-        logger.LogInformation("Received new order: {@Order}", request);
-        await messageBus.Publish("order_queue", System.Text.Json.JsonSerializer.Serialize(request));
-        logger.LogInformation("Order published successfully to RabbitMQ.");
-        
-        return Results.Accepted();
-    }
-    catch (BrokerUnreachableException ex)
-    {
-        logger.LogError(ex, "RabbitMQ broker unreachable while publishing order: {@Order}", request);
-        return Results.Problem(
-            title: "Error publishing message",
-            detail: ex.Message,
-            statusCode: StatusCodes.Status502BadGateway);
-    }
-    catch (Exception ex)
-    {
-        logger.LogError(ex, "Unexpected error while publishing order: {@Order}", request);
-        return Results.Problem(
-            title: "Unexpected error publishing message",
-            detail: ex.Message,
-            statusCode: StatusCodes.Status500InternalServerError);
+        try
+        {
+
+            logger.LogInformation("Received new order: {@Order}", request);
+            await messageBus.Publish("order_queue", System.Text.Json.JsonSerializer.Serialize(new
+            {
+                CorrelationId = correlationId,
+                Payload = request
+            }));
+            logger.LogInformation("Order published successfully to RabbitMQ.");
+
+
+            return Results.Accepted();
+        }
+        catch (BrokerUnreachableException ex)
+        {
+            logger.LogError(ex, "RabbitMQ broker unreachable while publishing order: {@Order}", request);
+            return Results.Problem(
+                title: "Error publishing message",
+                detail: ex.Message,
+                statusCode: StatusCodes.Status502BadGateway);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Unexpected error while publishing order: {@Order}", request);
+            return Results.Problem(
+                title: "Unexpected error publishing message",
+                detail: ex.Message,
+                statusCode: StatusCodes.Status500InternalServerError);
+        }
     }
 })
 .WithParameterValidation()
