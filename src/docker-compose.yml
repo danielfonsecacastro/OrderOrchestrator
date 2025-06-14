@@ -25,3 +25,41 @@ services:
       - RabbitMq__AutoDelete=false
     depends_on:
       - rabbitmq
+  
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - backend
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
+    volumes:
+        - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+        - "9090:9090"
+    networks:
+        - backend
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+    networks:
+      - backend
+    volumes:
+      - grafana-storage:/var/lib/grafana
+
+networks:
+    backend:
+volumes:
+  grafana-storage:
+ 
