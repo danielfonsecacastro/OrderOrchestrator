@@ -6,9 +6,14 @@ services:
     ports:
       - "5672:5672"    
       - "15672:15672"
+      - "15692:15692"
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - backend
+    command: >
+      bash -c "rabbitmq-plugins enable --offline rabbitmq_prometheus; rabbitmq-server"
 
   order-api:
     container_name: order-api
@@ -16,13 +21,15 @@ services:
       context: .
       dockerfile: OrderOrchestrator.Api\Dockerfile
     ports:
-      - "5000:8080"
+      - "8080:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - RabbitMq__HostName=rabbitmq
       - RabbitMq__Durable=false
       - RabbitMq__Exclusive=false
       - RabbitMq__AutoDelete=false
+    networks:
+      - backend
     depends_on:
       - rabbitmq
   

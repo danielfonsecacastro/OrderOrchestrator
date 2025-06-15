@@ -1,20 +1,19 @@
-using Microsoft.AspNetCore.Http;
 using OrderOrchestrator.Domain.Interfaces;
 using OrderOrchestrator.Infrastructure.Configurations;
 using OrderOrchestrator.Infrastructure.MessageBus;
+using Prometheus;
 using RabbitMQ.Client.Exceptions;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddOpenApi();
-
 builder.Services.Configure<RabbitMqOptions>(builder.Configuration.GetSection("RabbitMq"));
 builder.Services.AddScoped<IMessageBus, RabbitMqPublisher>();
 
 var app = builder.Build();
+app.MapMetrics();
 
 if (app.Environment.IsDevelopment())
 {
@@ -22,7 +21,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 
 app.MapPost("/orders", async (Order request, IMessageBus messageBus, ILogger<Program> logger, HttpContext httpContext) =>
 {
