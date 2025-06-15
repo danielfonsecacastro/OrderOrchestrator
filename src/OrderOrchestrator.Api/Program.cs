@@ -68,7 +68,7 @@ app.MapPost("/orders", async (Order request, IMessageBus messageBus, ILogger<Pro
 .ProducesValidationProblem();
 
 app.Run();
-
+public partial class Program { }
 internal record Address(
         [property: Required(ErrorMessage = "Street is required.")]
         string Street,
