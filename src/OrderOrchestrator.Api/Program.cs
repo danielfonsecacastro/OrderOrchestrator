@@ -3,6 +3,9 @@ using OrderOrchestrator.Infrastructure.Configurations;
 using OrderOrchestrator.Infrastructure.MessageBus;
 using Prometheus;
 using RabbitMQ.Client.Exceptions;
+using Serilog;
+using Serilog.Formatting.Json;
+using Serilog.Sinks.Network;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -11,6 +14,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.Configure<RabbitMqOptions>(builder.Configuration.GetSection("RabbitMq"));
 builder.Services.AddScoped<IMessageBus, RabbitMqPublisher>();
+
+var logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.TCPSink("tcp://logstash:5000", new JsonFormatter())
+    .CreateLogger();
+
+builder.Host.UseSerilog(logger);
+
 
 var app = builder.Build();
 app.MapMetrics();
@@ -28,12 +40,10 @@ app.MapPost("/orders", async (Order request, IMessageBus messageBus, ILogger<Pro
     if (httpContext.Request.Headers.TryGetValue("X-Correlation-Id", out var values))
         correlationId = values;
 
-    logger.LogInformation("correlationId daniel debug: {@correlationId}", correlationId);
     using (logger.BeginScope(new Dictionary<string, object> { ["CorrelationId"] = correlationId ?? Guid.NewGuid().ToString() }))
     {
         try
         {
-
             logger.LogInformation("Received new order: {@Order}", request);
             await messageBus.Publish("order_queue", System.Text.Json.JsonSerializer.Serialize(new
             {

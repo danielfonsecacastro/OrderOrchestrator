@@ -23,9 +23,11 @@ Acesse os serviços nos seguintes endereços após o ambiente estar de pé:
 | Serviço             | URL                                             | Usuário / Senha        |
 |---------------------|-------------------------------------------------|------------------------|
 | **Order API**       | [http://localhost:8080](http://localhost:8080)  |                        |
-| **RabbitMQ**        | [http://localhost:15672](http://localhost:15672) | guest / guest          |
+| **RabbitMQ**        | [http://localhost:15672](http://localhost:15672)| guest / guest          |
 | **Prometheus**      | [http://localhost:9090](http://localhost:9090)  |                        |
 | **Grafana**         | [http://localhost:3000](http://localhost:3000)  | admin / admin          |
+| **Kibana**          | [http://localhost:5601](http://localhost:5601)  |                        |
+
 
 
 ---
