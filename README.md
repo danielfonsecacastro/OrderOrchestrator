@@ -38,12 +38,6 @@ Acesse os serviços nos seguintes endereços após o ambiente estar de pé:
 - **Prometheus** coleta métricas dos serviços.
 - Acesse dashboards e métricas via URLs acima.
 
-### Importando o Dashboard Grafana
-
-1. Abra o Grafana em [http://localhost:3000](http://localhost:3000)
-2. No menu lateral, clique em "+" > Import
-3. Selecione o arquivo `grafana/grafana-dashboard.json` deste projeto
-4. Associe à fonte de dados Prometheus e clique em Import
 ---
 
 ## Observações
