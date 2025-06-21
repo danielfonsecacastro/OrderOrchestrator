@@ -34,10 +34,12 @@ services:
       - rabbitmq
   
   mongo:
-    container_name: mongo
+    container_name: mongodb
     image: mongo
     ports:
       - "27017:27017"
+    volumes:
+      - ../mongo-init/init-stock.js:/docker-entrypoint-initdb.d/init-stock.js:ro
     networks:
       - backend
 
