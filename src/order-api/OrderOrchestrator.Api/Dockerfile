@@ -12,11 +12,13 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["OrderOrchestrator.Api/OrderOrchestrator.Api.csproj", "OrderOrchestrator.Api/"]
-COPY ["OrderOrchestrator.Infrastructure/OrderOrchestrator.Infrastructure.csproj", "OrderOrchestrator.Infrastructure/"]
-COPY ["OrderOrchestrator.Domain/OrderOrchestrator.Domain.csproj", "OrderOrchestrator.Domain/"]
-RUN dotnet restore "./OrderOrchestrator.Api/OrderOrchestrator.Api.csproj"
-COPY . .
+COPY ["order-api/OrderOrchestrator.Api/OrderOrchestrator.Api.csproj", "OrderOrchestrator.Api/"]
+COPY ["order-api/OrderOrchestrator.Infrastructure/OrderOrchestrator.Infrastructure.csproj", "OrderOrchestrator.Infrastructure/"]
+COPY ["order-api/OrderOrchestrator.Domain/OrderOrchestrator.Domain.csproj", "OrderOrchestrator.Domain/"]
+RUN dotnet restore "OrderOrchestrator.Api/OrderOrchestrator.Api.csproj"
+COPY ["order-api/OrderOrchestrator.Domain/",    "OrderOrchestrator.Domain/"]
+COPY ["order-api/OrderOrchestrator.Infrastructure/", "OrderOrchestrator.Infrastructure/"]
+COPY ["order-api/OrderOrchestrator.Api/",       "OrderOrchestrator.Api/"]
 WORKDIR "/src/OrderOrchestrator.Api"
 RUN dotnet build "./OrderOrchestrator.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
