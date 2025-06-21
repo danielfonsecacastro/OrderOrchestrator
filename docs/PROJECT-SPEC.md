@@ -3,7 +3,7 @@ Este repositório contém um **showcase de backend .NET C#** voltado ao estudo e
 
 ## 2. Propósito  
 - **Aprender e demonstrar** como projetar sistemas event-driven e orientados a domínios.  
-- **Experimentar** microsserviços, filas, NoSQL, programação assíncrona, containers e IaC.  
+- **Experimentar** microsserviços, filas, NoSQL, programação assíncrona, containers e k8s, etc.  
 - **Construir um portfólio** que mostre domínio de práticas de engenharia de software modernas.
 
 ## 3. Escopo  
@@ -47,10 +47,10 @@ Este repositório contém um **showcase de backend .NET C#** voltado ao estudo e
 
 ## 6. Tech Stack
 
-- **Runtime & Linguagem**: .NET 7 (C# 11)  
+- **Runtime & Linguagem**: .NET 9 , Go 1.24.4  
 - **Mensageria**: RabbitMQ (ou Azure Service Bus)  
 - **Banco NoSQL**: MongoDB  
-- **Containerização**: Docker, Docker Compose, Kubernetes (Helm charts)  
+- **Containerização**: Docker, Docker Compose, Kubernetes
 - **IaC**: Terraform (módulos organizados por recurso)  
 - **CI/CD**: GitHub Actions (CI build/test, CD deploy)  
 - **Observabilidade**:  
