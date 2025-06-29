@@ -1,6 +1,6 @@
 module github.com/danielfonsecacastro/OrderOrchestrator/workers/stock-validation
 
-go 1.24.4
+go 1.24
 
 require (
 	github.com/golang/snappy v0.0.4 // indirect

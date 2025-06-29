@@ -26,7 +26,7 @@ Antes de tudo, tenha instalado em sua máquina:
 docker-compose up --build -d
 ```
 - `--build` força a reconstrução das imagens
-- `-d` executa em modo “detached” (em background)
+- `-d` opcional executa em modo “detached” (em background)
 
 **3. Acompanhe os logs em tempo real**
 

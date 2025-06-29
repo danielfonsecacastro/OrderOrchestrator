@@ -120,6 +120,20 @@ services:
     networks:
       - backend
 
+  stock-validation:
+    container_name: stock-validation
+    build:
+      context: ./workers/stock-validation
+      dockerfile: Dockerfile
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017
+      - RABBITMQ_URI=amqp://guest:guest@rabbitmq:5672/
+    depends_on:
+      - mongo
+      - rabbitmq
+    networks:
+      - backend
+
 networks:
     backend:
 volumes:
